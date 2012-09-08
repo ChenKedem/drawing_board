@@ -1,0 +1,288 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Drawing Board</title>
+
+	<!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+
+			// $(".topBar a").click(function(){
+			// 	contentSource = $(this).attr("href");
+
+			// 	$.ajax({
+			// 		url: contentSource,
+			// 		success:function(data){
+			// 			$("#content").html(data);
+			// 		}
+			// 	});
+			// 	return false;
+			// });
+
+			$("#notifications img").click(function(){
+				$("#notifications").slideUp();
+			});
+		});
+
+
+
+	</script>
+
+	<style type="text/css">
+
+		@font-face
+		{
+			font-family: Bartley;
+			src: url('Bartley.ttf');
+		}
+
+				body
+		{
+			margin: 0px;
+			padding: 0px;
+			font-family: Bartley, arial;
+			letter-spacing: 2px;
+			text-shadow: 0 0 1px rgba(0,0,0,0.5);
+			/*font-weight: bold;*/
+		}
+
+		header
+		{
+			background: black;
+			color: #00BBDD;
+			width: 100%;
+			height: 85px;
+			text-shadow: 0 0 1px rgba(255, 255, 255, 0.5)
+		}
+
+		header img
+		{
+			float: left;
+		}
+
+		.topBar
+		{
+			display: inline-block;
+			padding: 0px;
+			margin: 0px;
+			list-style: none;
+			padding-top: 30px;
+			/*margin-left: 300px;*/
+		}
+
+		.topBar li
+		{
+			display: inline;
+
+		}
+
+		.topBar li a
+		{
+			/*color: white;*/
+			font-size: 20px;
+			color: #00BBDD;
+			
+			text-decoration: none;
+			font-weight: bold;
+			padding-right: 25px;
+			text-transform: capitalize;
+		}
+
+		.topBar li a:hover
+		{
+			color: white;
+		}
+
+		#logIn
+		{
+			/*display: inline;*/
+			float: right;
+			/*color: white;*/
+			padding: 15px;
+			margin: 0px;
+			font-weight: bold;
+		}
+
+		input
+		{
+			-webkit-border-radius: 6px;
+			-moz-border-radius: 6px;
+			border-radius: 6px;
+			border: 0px;
+			background-color: white;
+			/*background-color: #99FFEE;*/
+			/*opacity: 0.5;*/
+		}
+
+		#search
+		{
+			float: right;
+			/*color: white;*/
+			font-weight: bold;
+			padding: 30px 10px;
+		}
+
+		#notifications 
+		{
+			padding: 0px 0px 2px 0px; 
+			background: #CC0055;
+			color: white;
+			/*opacity: 0.7;*/
+			/*text-align: center;*/
+		}
+
+		#notifications img
+		{
+			/*display: inline;*/
+			float: right;
+			cursor: pointer;
+			width: 15px;
+			height: 15px;
+		}
+
+		#notifications h3
+		{
+			margin: 0px;
+			padding: 10px 10px 0px 50px;
+			text-transform: capitalize;
+		}
+
+		#notifications p
+		{
+			padding: 0px 10px 10px 50px;
+			margin: 0px;
+			font-weight: bold;
+		}
+
+		#content
+		{
+			display: block;
+			min-height: 495px;
+			background: #CC2244;
+
+		}
+
+
+		footer
+		{
+			text-align: center;
+			border-top: solid 1px;
+			border-color: #969696;
+			padding-top: 5px;
+			margin: 10px 100px;
+		}
+
+		footer a
+		{
+			font-weight: bold;
+			text-decoration: none;
+			padding-right: 20px;
+			color: black;	
+		}
+
+		/*settings css*/
+		.tabNav, .tabNav li
+		{
+			border: 0px;
+			padding: 0px;
+			margin: 0px;
+			list-style: none;
+		}		
+
+		.tabNav 
+		{
+			border-bottom: solid 1px #DEDEDE;
+			height: 29px;
+			padding-left: 20px;
+			margin-top: 10px;
+		}
+
+		.tabNav li
+		{
+			float: left;
+			margin-right: 2px;
+		}
+
+		.tabNav a:link, .tabNav a:visited
+		{
+			background: url("images/tab-round.png") right 60px;
+			color: #666666;
+			display: block;
+			font-weight: bold;
+			height: 30px;
+			line-height: 30px;
+			text-decoration: none;
+		}
+
+		.tabNav a span
+		{
+			background: url("images/tab-round.png") left 60px;
+			display: block;
+			height: 30px;
+			margin-right: 14px;
+			padding-left: 14px;
+		}
+
+		.tabNav a:hover
+		{
+			background: url("images/tab-round.png") right 30px;
+			display: block;
+		}
+
+		.tabNav a:hover span
+		{
+			background: url("images/tab-round.png") left 30px;
+		}
+
+		.active a:link, .active a:visited, .active a:visited, .active a:hover{
+			background: url("images/tab-round.png") right 0 no-repeat;
+		}
+		.active a span, .active a:hover span{
+			background: url("images/tab-round.png") left 0 no-repeat;
+		}
+
+		/*end of settings css*/
+
+	</style>
+</head>
+<body>
+	<header>
+		<img src="images/logo.png" />
+
+		<ul class="topBar">
+			<li><a href="">demo</a></li>
+			<li><a href="">sign up</a></li>
+			<li><a href="settings.html">settings</a></li>
+			<li><a href="">contact us</a></li>
+		</ul>
+		
+		<table id="logIn">
+			<tr>
+				<td>e-mail:</td>
+				<td><input type="text" name="email" /></td>
+			</tr>
+			<tr>
+				<td>password:</td>
+				<td><input type="password" name="password" /></td>
+			</tr>
+		</table>
+		<form id="search">search: <input type="text" name="search" /></form>
+	</header>
+	<div id="notifications">
+		<img src="images/close.png">
+		<h3>about us</h3>
+		<p>With Drawing Board you will be able to share writings, sketches, drawings, edited photos and more, in public room where anyone can see your piece of art and add their own ideas, or in a private room to your chosen friends eyes only.  <br/>
+		try it yourself, pleasure guaranteed :) </p>
+	</div>
+	<div id="content"></div>
+	<footer>
+		<a href="">demo</a>
+		<a href="">log in</a>
+		<a href="">sign up</a>
+		<a href="">admin</a>
+		<a href="">contact us</a>
+	</footer>
+</body>
+</html>
