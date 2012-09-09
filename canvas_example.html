@@ -60,10 +60,10 @@
         var tool_default = 'pencil';
         var tool;
 
-        current_color = $("#pcolor").val();
+        color = $("#pcolor").val();
         
         $("#pcolor").change(function(){
-          current_color = this.value;
+          color = this.value;
         });
 
         fill_color = $("#fcolor").val();
@@ -116,27 +116,34 @@
           $.each(shapeCreatedEventHandlers, function() { this(shapeObj) });
         }
 
-        tool_kit.shapeCreated(function(shapeObj) { alert(shapeObj.shape)});
+        // tool_kit.shapeCreated(function(shapeObj) { alert(shapeObj.shape)});
 
         // Add tool classes to the tool_kit namespace
         tool_kit.pencil = function(){
           var tool = this;
           this.started = false;
           
+          path_points = new Array();
 
           this.mousedown = function(ev){
             context.beginPath();
             context.moveTo(ev._x, ev._y);
             tool.started = true;
+          
+            point = {x: ev._x, y: ev._y}
+            path_points.push(point);
           }
 
           this.mousemove = function(ev){
             if (tool.started){
               context.lineTo(ev._x, ev._y);
               context.fillStyle = fill_color;
-              context.strokeStyle = current_color;
+              context.strokeStyle = color;
               context.lineWidth = line_width;
               context.stroke();
+          
+              point = {x: ev._x, y: ev._y}
+              path_points.push(point);   
             }
           };
 
@@ -145,12 +152,31 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
+              console.log(path_points);
 
               // Call event handler with the information of the shape which just created.
-              shapeObj = { shape: "pencil", color: "#512412", position: { x: 51, y: 202 } };              
+              shapeObj = { 
+                shape: "pencil", 
+                path: path_points,
+                lineWidth: line_width,
+                strokeStyle: color,
+                fillStyle: fill_color 
+              };              
+
               tool_kit.onShapeCreated(shapeObj);
             }
           }
+        }
+
+
+        function rectInfo(x, y, w, h, lw, c, fc){
+          this.xStart = x;
+          this.yStart = y;
+          this.width = w;
+          this.height = h;
+          this.lineWidth = lw;
+          this.strokeStyle = c;
+          this.fillStyle = fc;
         }
 
         tool_kit.rect = function(){
@@ -182,8 +208,20 @@
                 context.lineWidth = line_width;
                 context.fillStyle = fill_color;
                 context.fillRect(x , y, w, h);
-                context.strokeStyle = current_color;
+                context.strokeStyle = color;
                 context.strokeRect(x, y, w, h);
+
+                shapeObj = { 
+                  shape: 'rectangle',
+                  startPosition: { x: x, y: y},
+                  width: w, 
+                  height: h,
+                  lineWidth: line_width,
+                  strokeStyle: color,
+                  fillStyle: fill_color
+                };
+                
+                // rectangle = new rectInfo(x, y, w, h, line_width, color, fill_color);  
           };
 
           this.mouseup = function(ev){
@@ -191,6 +229,9 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
+
+              // alert(shapeObj.startPosition.x + " " + shapeObj.startPosition.y + " " + shapeObj.width + " " + shapeObj.height);
+              // console.log(rectangle.shape);
             }
           };
         };
@@ -216,7 +257,7 @@
             context.moveTo(tool.x0, tool.y0);
             context.lineTo(ev._x, ev._y);
             context.lineWidth = line_width;
-            context.strokeStyle = current_color;
+            context.strokeStyle = color;
             context.stroke();
             context.fillStyle = fill_color;
             context.closePath();
@@ -227,6 +268,17 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
+
+              shapeObj = { 
+                shape: "line", 
+                startPoint: {x: tool.x0, y: tool.y0},
+                endPoint: {x: ev._x, y: ev._y},
+                lineWidth: line_width,
+                strokeStyle: color,
+                fillStyle: fill_color 
+              };
+
+              // alert(shapeObj.startPoint.x + " " + shapeObj.startPoint.y + " " + shapeObj.endPoint.x + " " + shapeObj.endPoint.y);
             }
           };
         };
@@ -257,9 +309,19 @@
 
             context.fillStyle = fill_color;
             context.fill();
-            context.strokeStyle = current_color;
+            context.strokeStyle = color;
             context.stroke();
             context.closePath();
+
+            shapeObj = {
+              shape: 'ellipse',
+              startPosition: { x: tool.x0, y: tool.y0},
+              width: ellipseWidth, 
+              height: ellipseHeight,
+              lineWidth: line_width,
+              strokeStyle: color,
+              fillStyle: fill_color
+            };
           };
 
           this.mouseup = function(ev){
@@ -274,11 +336,14 @@
         tool_kit.eraser = function(){
           var tool = this;
           this.started = false;
+          path_points = new Array();
 
           this.mousedown = function(ev){
             context.beginPath();
             context.moveTo(ev._x, ev._y);
             tool.started = true;
+            point = {x: ev._x, y: ev._y}
+            path_points.push(point);
           };
 
           this.mousemove = function(ev){
@@ -288,6 +353,8 @@
               context.strokeStyle = "#FFFFFF";
               context.lineWidth = line_width;
               context.stroke();
+              point = {x: ev._x, y: ev._y}
+              path_points.push(point);  
             }
           };
 
@@ -296,6 +363,12 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
+
+              shapeObj = { 
+                shape: "eraser", 
+                path: path_points,
+                lineWidth: line_width
+              };
             }
           }
         }
