@@ -116,7 +116,7 @@
           $.each(shapeCreatedEventHandlers, function() { this(shapeObj) });
         }
 
-        // tool_kit.shapeCreated(function(shapeObj) { alert(shapeObj.shape)});
+        tool_kit.shapeCreated(function(shapeObj) { alert(shapeObj.shape)});
 
         // Add tool classes to the tool_kit namespace
         tool_kit.pencil = function(){
@@ -152,7 +152,6 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
-              console.log(path_points);
 
               // Call event handler with the information of the shape which just created.
               shapeObj = { 
@@ -166,17 +165,6 @@
               tool_kit.onShapeCreated(shapeObj);
             }
           }
-        }
-
-
-        function rectInfo(x, y, w, h, lw, c, fc){
-          this.xStart = x;
-          this.yStart = y;
-          this.width = w;
-          this.height = h;
-          this.lineWidth = lw;
-          this.strokeStyle = c;
-          this.fillStyle = fc;
         }
 
         tool_kit.rect = function(){
@@ -220,8 +208,6 @@
                   strokeStyle: color,
                   fillStyle: fill_color
                 };
-                
-                // rectangle = new rectInfo(x, y, w, h, line_width, color, fill_color);  
           };
 
           this.mouseup = function(ev){
@@ -229,10 +215,9 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
-
-              // alert(shapeObj.startPosition.x + " " + shapeObj.startPosition.y + " " + shapeObj.width + " " + shapeObj.height);
-              // console.log(rectangle.shape);
             }
+
+            tool_kit.onShapeCreated(shapeObj);
           };
         };
 
@@ -277,9 +262,9 @@
                 strokeStyle: color,
                 fillStyle: fill_color 
               };
-
-              // alert(shapeObj.startPoint.x + " " + shapeObj.startPoint.y + " " + shapeObj.endPoint.x + " " + shapeObj.endPoint.y);
             }
+
+            tool_kit.onShapeCreated(shapeObj);
           };
         };
 
@@ -330,6 +315,8 @@
               tool.started = false;
               img_update();
             }
+
+            tool_kit.onShapeCreated(shapeObj);
           };
         };  
 
@@ -370,6 +357,7 @@
                 lineWidth: line_width
               };
             }
+            tool_kit.onShapeCreated(shapeObj);            
           }
         }
 
