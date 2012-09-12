@@ -116,7 +116,12 @@
           $.each(shapeCreatedEventHandlers, function() { this(shapeObj) });
         }
 
-        tool_kit.shapeCreated(function(shapeObj) { alert(shapeObj.shape)});
+        objectsArray = new Array();
+
+        tool_kit.shapeCreated(function(shapeObj) { 
+          objectsArray.push(shapeObj);
+          console.log(objectsArray);
+        });
 
         // Add tool classes to the tool_kit namespace
         tool_kit.pencil = function(){
@@ -157,7 +162,7 @@
               shapeObj = { 
                 shape: "pencil", 
                 path: path_points,
-                lineWidth: line_width,
+                lineWidth: context.lineWidth,
                 strokeStyle: color,
                 fillStyle: fill_color 
               };              
@@ -204,7 +209,7 @@
                   startPosition: { x: x, y: y},
                   width: w, 
                   height: h,
-                  lineWidth: line_width,
+                  lineWidth: context.lineWidth,
                   strokeStyle: color,
                   fillStyle: fill_color
                 };
@@ -215,9 +220,8 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
+              tool_kit.onShapeCreated(shapeObj);
             }
-
-            tool_kit.onShapeCreated(shapeObj);
           };
         };
 
@@ -258,13 +262,13 @@
                 shape: "line", 
                 startPoint: {x: tool.x0, y: tool.y0},
                 endPoint: {x: ev._x, y: ev._y},
-                lineWidth: line_width,
+                lineWidth: context.lineWidth,
                 strokeStyle: color,
                 fillStyle: fill_color 
               };
-            }
 
-            tool_kit.onShapeCreated(shapeObj);
+              tool_kit.onShapeCreated(shapeObj);
+            }
           };
         };
 
@@ -303,7 +307,7 @@
               startPosition: { x: tool.x0, y: tool.y0},
               width: ellipseWidth, 
               height: ellipseHeight,
-              lineWidth: line_width,
+              lineWidth: context.lineWidth,
               strokeStyle: color,
               fillStyle: fill_color
             };
@@ -314,9 +318,11 @@
               tool.mousemove(ev);
               tool.started = false;
               img_update();
+
+              tool_kit.onShapeCreated(shapeObj);
             }
 
-            tool_kit.onShapeCreated(shapeObj);
+
           };
         };  
 
@@ -354,10 +360,12 @@
               shapeObj = { 
                 shape: "eraser", 
                 path: path_points,
-                lineWidth: line_width
+                lineWidth: context.lineWidth
               };
+
+              tool_kit.onShapeCreated(shapeObj);
             }
-            tool_kit.onShapeCreated(shapeObj);            
+            
           }
         }
 
