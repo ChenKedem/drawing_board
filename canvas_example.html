@@ -401,6 +401,17 @@
 
   <style type="text/css">
 
+    @font-face
+    {
+      font-family: Bartley;
+      src: url('Bartley.ttf');
+    }
+
+    body
+    {
+      font-family: Bartley, arial;
+    }
+
     #container
     {
       position: relative;
@@ -410,32 +421,38 @@
 
     #panel
     {
-      background: url("images/panel.png");
+      background: url("images/panel1.png");
       background-repeat: no-repeat;
-      /*background-color: #FF4400;*/
-      width: 800px;
-      height: 130px;
-      /*border: 5px solid #FF1100;*/
+      width: 670px;
+      height: 120px;
       margin: 20px 10px 20px 20px;
-      padding: 20px 0px 0px 40px;
-      /*border-radius: 20px;*/
-      /*box-shadow: 10px 10px 5px #888888;*/
+      padding: 20px 0px 0px 28px;
     }
 
-    .tools
+    .tools 
     {
-      list-style: none;
-      display: inline;
-      margin-top: 40px;
-      padding: 20px 0px 0px 0px;
+      margin: 0px;
+      padding: 0px;
+    }
 
+    .tool, .tool_style
+    {
+      display: inline-block;
+      vertical-align: middle;
+      /*opacity: 0.9;*/
+    }
+
+    .tool_style
+    {
+      font-weight: bold;
+      text-align: center;
+      /*width: 90px;*/
+      margin: 0px 10px;
     }
 
     .tool
     {
-      display: inline;
       cursor: pointer;
-      /*opacity: 0.9;*/
     }
 
     .tool:hover
@@ -446,10 +463,38 @@
     .pan_el
     {
       display: inline-block;
+      font-weight: bold;
+      margin-right: 15px;
     }
 
     #imageTemp {
       cursor: crosshair;
+    }
+
+    #chat
+    {
+      position: fixed;
+      bottom: 0px;
+      right: 20px;
+      width: 250px;
+      height: 400px;
+      border: outset 5px #AAAAAA;
+      border-radius: 15px;
+
+    }
+
+    #text-box textarea
+    {
+      position: absolute;
+      bottom: 20px;
+    }
+
+    #text_box form
+    {
+      position: absolute;
+      bottom: 0px;
+      padding: 0px 0px 0px 10px;
+      margin: 0px;
     }
 
   </style>
@@ -462,28 +507,41 @@
       <li id="rect" class="tool"><img src="images/rectangle_button.png" title="Rectangle" /></li>
       <li id="ellipse" class="tool"><img src="images/ellipse_button.png" title="Ellipse" /></li>
       <li id="eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
+      <li class="tool_style">
+        <label>Line Width</br>
+          <select id="line_wid">
+            <option value="1">1px</option>
+            <option value="2">2px</option>
+            <option value="3">3px</option>
+            <option value="4">4px</option>
+            <option value="5">5px</option>
+            <option value="6">6px</option>
+          </select>
+        </label>
+      </li>
+      <li class="tool_style">Color</br>
+        <input type="color" name="color" id="pcolor" />
+      </li>
+      <li class="tool_style">Filling</br>
+        <input type="color" name="fcolor" id="fcolor" />
+      </li>
     </ul>
-
-    <p class="pan_el">
-      <label>Line Width:</br>
-        <select id="line_wid">
-          <option value="1">1px</option>
-          <option value="2">2px</option>
-          <option value="3">3px</option>
-          <option value="4">4px</option>
-          <option value="5">5px</option>
-          <option value="6">6px</option>
-        </select>
-      </label>
-    </p>
-   
-    <p class="pan_el">Color:</br><input type="color" name="color" id="pcolor" /></p>
-    
-    <p class="pan_el">Fill Color:</br><input type="color" name="fcolor" id="fcolor" /></p>
   </div>  
 
   <div id="container">
     <canvas id="imageView" width="400" height="300" style="border: 1px solid black"></canvas>
   </div>
+
+  <div id="chat">
+    <div id="online_members"></div>
+    <div id="text_box">
+      <textarea rows="20" cols="28"></textarea>
+      <form>
+        <input type="text" />
+        <input type="button" value="send" />
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
