@@ -423,9 +423,24 @@
     #container
     {
       position: relative;
+      background-image: url("images/board.png");
+      background-repeat: no-repeat;
+      width: 690px;
+      height: 450px;
     }
-    #imageView { border: 1px solid #000; }
-    #imageTemp { position: absolute; top: 1px; left: 1px; }
+    #imageView 
+    {
+      border: 1px solid #FFFFFF; 
+      -webkit-border-radius: 20px;
+      -moz-border-radius: 20px;
+      border-radius: 20px;
+      position: absolute;
+      top: 23px;
+      left: 24px;
+      background-color: white;
+    }
+
+    #imageTemp { position: absolute; top: 24px; left: 25px; }
 
     #panel
     {
@@ -518,6 +533,13 @@
       -webkit-border-radius: 6px;
       -moz-border-radius: 6px;
       border-radius: 6px;
+      font-family: Bartley;
+      font-weight: bold;
+    }
+
+    #online_members
+    {
+      
     }
 
   </style>
@@ -552,7 +574,7 @@
   </div>  
 
   <div id="container">
-    <canvas id="imageView" width="400" height="300" style="border: 1px solid black"></canvas>
+    <canvas id="imageView" width="640" height="400"></canvas>
   </div>
 
   <div id="chat">
