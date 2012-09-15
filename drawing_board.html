@@ -9,17 +9,17 @@
 
 		$(document).ready(function(){
 
-			// $(".topBar a").click(function(){
-			// 	contentSource = $(this).attr("href");
+			$(".topBar a").click(function(){
+				contentSource = $(this).attr("href");
 
-			// 	$.ajax({
-			// 		url: contentSource,
-			// 		success:function(data){
-			// 			$("#content").html(data);
-			// 		}
-			// 	});
-			// 	return false;
-			// });
+				$.ajax({
+					url: contentSource,
+					success:function(data){
+						$("#content").html(data);
+					}
+				});
+				return false;
+			});
 
 			$("#notifications img").click(function(){
 				$("#notifications").slideUp();
@@ -129,13 +129,10 @@
 			padding: 0px 0px 2px 0px; 
 			background: #CC0055;
 			color: white;
-			/*opacity: 0.7;*/
-			/*text-align: center;*/
 		}
 
 		#notifications img
 		{
-			/*display: inline;*/
 			float: right;
 			cursor: pointer;
 			width: 15px;
@@ -160,8 +157,7 @@
 		{
 			display: block;
 			min-height: 495px;
-			background: #CC2244;
-
+			/*background: #CC2244;*/
 		}
 
 
@@ -252,7 +248,7 @@
 		<img src="images/logo.png" />
 
 		<ul class="topBar">
-			<li><a href="">demo</a></li>
+			<li><a href="canvas.html">demo</a></li>
 			<li><a href="">sign up</a></li>
 			<li><a href="settings.html">settings</a></li>
 			<li><a href="">contact us</a></li>
