@@ -2,10 +2,11 @@
 <head>
   <title></title>
   <link rel="stylesheet" type="text/css" href="canvas_style.css" />
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="wColorPicker.1.2.min.css" />
+  <script type="text/javascript" src="wColorPicker.1.2.min.js"></script>
   <script type="text/javascript">
 
-    
     $(document).ready(function() {
 
       function init(){
@@ -35,51 +36,42 @@
         // This will be used first to preview what will be later drawn on the static canvas
         canvas = $("<canvas id='imageTemp' width='" + canvaso.width + "' height='" + canvaso.height + "'></canvas>");
 
-        canvas.mousedown(ev_canvas) // canvas[0].addEventListener("mousedown", ev_canvas, false)
+        canvas.mousedown(evCanvas) // canvas[0].addEventListener("mousedown", ev_canvas, false)
                                     // ev_canvas(event)      event = { type: "mousedown", offsetX: 412, offsetY: 120, ... ... }
-              .mousemove(ev_canvas)
-              .mouseup(ev_canvas);
+              .mousemove(evCanvas)
+              .mouseup(evCanvas);
 
         $("#container").append(canvas);
 
         canvas = canvas[0];
         context = canvas.getContext('2d');
 
-
         // Set tool select box
-        var tool_select = $("#dtool .tool");
+        var toolSelect = $("#dtool .tool");
        
-        if (!tool_select.length) {
+        if (!toolSelect.length) {
           alert('Error: failed to get the dtool element!');
           return;
         }
 
-        $(tool_select).click(ev_tool_change);  // tool_select[0].addEventListener("change", ev_tool_change, false)
+        toolSelect.click(evToolChange);  // for (var i = 0; i < tool_select.length; ++i) { tool_select[i].addEventListener("click", ev_tool_change, false) }
 
         // Define the tool kit namespace
-        var tool_kit = {};
-        var tool_default = 'pencil';
+        var ToolKit = {};
+        var toolDefault = 'Pencil';
         var tool;
 
-        color = $("#pcolor").val();
-        
-        $("#pcolor").change(function(){
-          color = this.value;
+        $("#pcolor").wColorPicker({onSelect:function(chosenColor){ color = chosenColor}, mode: 'hover', effect: 'none', color: 'white', initColor: '#334455'});
+
+        $("#fcolor").wColorPicker({onSelect:function(chosenColor){fillColor = chosenColor}, mode: 'hover', effect: 'none', color: 'white', initColor: '#334455'});     
+
+        lineWidth = $("#lineWid :first");
+
+        $("#lineWid").change(function(){
+          lineWidth = this.value;
         });
 
-        fill_color = $("#fcolor").val();
-
-        $("#fcolor").change(function(){
-          fill_color = this.value;
-        });
-
-        line_width = $("#line_wid :first");
-
-        $("#line_wid").change(function(){
-          line_width = $("#line_wid :selected").val();
-        });
-
-        function ev_canvas(ev) {
+        function evCanvas(ev) {
           // This will prevent chrome from changing cursor type to text on drag.
           ev.originalEvent.preventDefault();
 
@@ -90,353 +82,358 @@
 
           // Can't use tool.ev.type 
           // Because: ev.type = "mousemove",    tool.attribute_name => tool["attribute_name"],      tool.ev.type => tool["ev"].type,
-          var func = tool[ev.type];    // ev.type == "mousemove",      tool["mousemove"]
+          var func = tool[ev.type];    // ev.type == "mousemove",      tool["mousemove"], tool.mousemove
           if (func) {
-            func(ev);
+            func.call(tool, ev);
           }
         }
 
-        function ev_tool_change(ev) {
-          if (tool_kit[$(this).attr("id")]) {
-            tool = new tool_kit[$(this).attr("id")]();
+        function evToolChange(ev) {
+          if (ToolKit[$(this).attr("id")]) {
+            tool = new ToolKit[$(this).attr("id")];
           }
         }
 
-        function img_update () {
+        function imgUpdate () {
           contexto.drawImage(canvas, 0, 0);
           context.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        shapeCreatedEventHandlers = new Array();  
+        // Array of shapeCreated event handlers
+        shapeCreatedEventHandlers = new Array();
 
-        tool_kit.shapeCreated = function(func){
-          shapeCreatedEventHandlers.push(func);
+        ToolKit.shapeCreated = function(eventHandler){
+          shapeCreatedEventHandlers.push(eventHandler);
         }
 
-        tool_kit.onShapeCreated = function(shapeObj){
+        ToolKit.onShapeCreated = function(shapeObj){
+          // Reminder: when calling a function with .call(o)
+          // Keyword 'this' inside the function will be replaced with o
+          // That's why the following line has the same functionality as:
+          // for (var i = 0; i < shapeCreatedEventHandlers.length; ++i) {
+          //   var executer = function() { this(shapeObj) }
+          //   executer.call(shapeCreatedEventHandlers[i])
+          // }
           $.each(shapeCreatedEventHandlers, function() { this(shapeObj) });
         }
 
         objectsArray = new Array();
 
-        tool_kit.shapeCreated(function(shapeObj) { 
+        ToolKit.shapeCreated(function(shapeObj) { 
           objectsArray.push(shapeObj);
           console.log(objectsArray);
         });
 
         // Add tool classes to the tool_kit namespace
-        tool_kit.pencil = function(){
-          var tool = this;
+        ToolKit.Tool = function() {
           this.started = false;
-          
-          path_points = new Array();
-
-          this.mousedown = function(ev){
-            context.beginPath();
-            context.moveTo(ev._x, ev._y);
-            tool.started = true;
-          
-            point = {x: ev._x, y: ev._y}
-            path_points.push(point);
-          }
-
-          this.mousemove = function(ev){
-            if (tool.started){
-              context.lineTo(ev._x, ev._y);
-              context.fillStyle = fill_color;
-              context.strokeStyle = color;
-              context.lineWidth = line_width;
-              context.stroke();
-          
-              point = {x: ev._x, y: ev._y}
-              path_points.push(point);   
-            }
-          };
-
-          this.mouseup = function(ev){
-            if (tool.started){
-              tool.mousemove(ev);
-              // context.closePath();
-              tool.started = false;
-              img_update();
-
-              // Call event handler with the information of the shape which just created.
-              shapeObj = { 
-                shape: "pencil", 
-                path: path_points,
-                lineWidth: context.lineWidth,
-                strokeStyle: color,
-                fillStyle: fill_color 
-              };              
-
-              tool_kit.onShapeCreated(shapeObj);
-            }
-          }
-
-          function createPencilObj(obj){
-            contexto.strokeStyle = obj.strokeStyle;
-            contexto.fillStyle = obj.fillStyle;
-            contexto.lineWidth = obj.lineWidth;
-            contexto.beginPath();
-            contexto.moveTo(obj.path[0].x, obj.path[0].y);
-            for(i = 1; i < obj.path.length; ++i)
-            {
-              contexto.lineTo(obj.path[i].x, obj.path[i].y);
-              contexto.stroke();
-            }
-            contexto.closePath();
-          }
-
         }
 
-        tool_kit.rect = function(){
-          var tool = this;
-          this.started = false;
-          
-          this.mousedown = function(ev){
-            tool.started = true;
-            tool.x0 = ev._x;
-            tool.y0 = ev._y;
-          };
+        ToolKit.PathTool = function() {
+          this.pathPoints = new Array();
+        }
+        ToolKit.PathTool.prototype = new ToolKit.Tool;
 
-          this.mousemove = function(ev){
-            if(!tool.started){
-              return;
-            }
+        ToolKit.Pencil = function() {};
+        ToolKit.Pencil.prototype = new ToolKit.PathTool;
 
-            var x = Math.min(ev._x, tool.x0),
-                y = Math.min(ev._y, tool.y0),
-                w = Math.abs(ev._x - tool.x0),
-                h = Math.abs(ev._y - tool.y0);
+        ToolKit.Pencil.prototype.mousedown = function(ev) {
+          if (this.pathPoints.length > 0) {
+            this.pathPoints = [];
+          }
+          context.beginPath();
+          context.moveTo(ev._x, ev._y);
+          this.started = true;
+        
+          this.pathPoints.push({ x: ev._x, y: ev._y });  
+        }
 
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
-            if(!w || !h){
-              return;
-            }
-
-            context.lineWidth = line_width;
-            context.fillStyle = fill_color;
-            context.fillRect(x , y, w, h);
+        ToolKit.Pencil.prototype.mousemove = function(ev) {
+          if (this.started) {
+            context.lineTo(ev._x, ev._y);
+            context.fillStyle = fillColor;
             context.strokeStyle = color;
-            context.strokeRect(x, y, w, h);
+            context.lineWidth = lineWidth;
+            context.stroke();
 
-            shapeObj = { 
-              shape: 'rectangle',
-              startPosition: { x: x, y: y},
-              width: w, 
-              height: h,
+            this.pathPoints.push({ x: ev._x, y: ev._y });   
+          }
+        } 
+
+        ToolKit.Pencil.prototype.mouseup = function(ev) {
+          if (this.started) {
+            this.mousemove(ev);
+            this.started = false;
+            imgUpdate();
+
+            // Call event handler with the information of the shape which just created.
+            var shapeObj = { 
+              shape: "Pencil", 
+              path: this.pathPoints,
               lineWidth: context.lineWidth,
               strokeStyle: color,
-              fillStyle: fill_color
-            };
-          };
+              fillStyle: fillColor 
+            };              
 
-          this.mouseup = function(ev){
-            if (tool.started){
-              tool.mousemove(ev);
-              tool.started = false;
-              img_update();
-              tool_kit.onShapeCreated(shapeObj);
-            }
-          };
-
-          function createRectangle(obj){
-              contexto.lineWidth = obj.lineWidth;
-              contexto.fillStyle = obj.fillStyle;
-              contexto.strokeStyle = obj.strokeStyle;
-              contexto.fillRect(obj.startPosition.x, obj.startPosition.y, obj.width, obj.height);
-              contexto.strokeRect(obj.startPosition.x, obj.startPosition.y, obj.width, obj.height);
+            ToolKit.onShapeCreated(shapeObj);
           }
+        }
 
-        };
-
-        tool_kit.line = function(){
-          var tool = this;
-          this.started = false;
-
-          this.mousedown = function(ev){
-            tool.started = true;
-            tool.x0 = ev._x;
-            tool.y0 = ev._y;
-          };
-
-          this.mousemove = function(ev){
-            if(!tool.started){
-              return;
-            }
-
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
-            context.beginPath();
-            context.moveTo(tool.x0, tool.y0);
-            context.lineTo(ev._x, ev._y);
-            context.lineWidth = line_width;
-            context.strokeStyle = color;
-            context.fillStyle = fill_color;
-            context.stroke();
-            context.closePath();
-          };
-
-          this.mouseup = function(ev){
-            if(tool.started){
-              tool.mousemove(ev);
-              tool.started = false;
-              img_update();
-
-              shapeObj = { 
-                shape: "line", 
-                startPoint: {x: tool.x0, y: tool.y0},
-                endPoint: {x: ev._x, y: ev._y},
-                lineWidth: context.lineWidth,
-                strokeStyle: color,
-                fillStyle: fill_color 
-              };
-
-              tool_kit.onShapeCreated(shapeObj);
-            }
-          };
-
-          function createLine(obj){
-            contexto.beginPath();
-            contexto.moveTo(obj.startPoint.x, obj.startPoint.y);
-            contexto.lineTo(obj.endPoint.x, obj.endPoint.y);
-            contexto.lineWidth = obj.lineWidth;
-            contexto.strokeStyle = obj.strokeStyle;
-            contexto.fillStyle = obj.fillStyle;
+        ToolKit.Pencil.drawShapeObject = function(shapeObj) {
+          contexto.strokeStyle = shapeObj.strokeStyle;
+          contexto.fillStyle = shapeObj.fillStyle;
+          contexto.lineWidth = shapeObj.lineWidth;
+          contexto.beginPath();
+          contexto.moveTo(shapeObj.path[0].x, shapeObj.path[0].y);
+          for (i = 1; i < shapeObj.path.length; ++i) {
+            contexto.lineTo(shapeObj.path[i].x, shapeObj.path[i].y);
             contexto.stroke();
-            contexto.closePath();
+          }
+          contexto.closePath();
+        }
+
+        ToolKit.Eraser = function() {};
+        ToolKit.Eraser.prototype = new ToolKit.PathTool;
+
+        ToolKit.Eraser.prototype.mousedown = function(ev) {
+          context.beginPath();
+          context.moveTo(ev._x, ev._y);
+          this.started = true;
+          
+          this.pathPoints.push({ x: ev._x, y: ev._y }); 
+        }
+
+        ToolKit.Eraser.prototype.mousemove = function(ev) {
+          if (this.started) {
+            context.lineTo(ev._x, ev._y);
+            context.fillStyle = "#FFFFFF";
+            context.strokeStyle = "#FFFFFF";
+            context.lineWidth = lineWidth;
+            context.stroke();
+            
+            this.pathPoints.push({ x: ev._x, y: ev._y });  
+          }
+        }
+
+        ToolKit.Eraser.prototype.mouseup = function(ev) {
+          if (this.started){
+            this.mousemove(ev);
+            this.started = false;
+            imgUpdate();
+
+            shapeObj = { 
+              shape: "Eraser", 
+              path: this.pathPoints,
+              lineWidth: context.lineWidth
+            };
+
+            ToolKit.onShapeCreated(shapeObj);
+          }            
+        }
+
+        ToolKit.Eraser.drawShapeObject = function(shapeObj){
+          contexto.strokeStyle = "#FFFFFF";
+          contexto.lineWidth = shapeObj.lineWidth;
+          contexto.beginPath();
+          contexto.moveTo(shapeObj.path[0].x, shapeObj.path[0].y);
+          for(i = 1; i < shapeObj.path.length; ++i)
+          {
+            contexto.lineTo(shapeObj.path[i].x, shapeObj.path[i].y);
+            contexto.stroke();
+          }
+          contexto.closePath();
+        }
+
+        ToolKit.GeometricTool = function() {
+          this.x0 = 0;
+          this.y0 = 0;
+        }
+        ToolKit.GeometricTool.prototype = new ToolKit.Tool;
+
+        ToolKit.Rectangle = function() {}
+        ToolKit.Rectangle.prototype = new ToolKit.GeometricTool;
+
+        ToolKit.Rectangle.prototype.mousedown = function(ev) {
+          this.started = true;
+          this.x0 = ev._x;
+          this.y0 = ev._y;
+        }
+
+        ToolKit.Rectangle.prototype.mousemove = function(ev) {
+          if(!this.started) {
+              return;
           }
 
-        };
+          var x = Math.min(ev._x, this.x0),
+              y = Math.min(ev._y, this.y0),
+              w = Math.abs(ev._x - this.x0),
+              h = Math.abs(ev._y - this.y0);
 
-        tool_kit.ellipse = function(){
-          var tool = this;
-          this.started = false;
+          context.clearRect(0, 0, canvas.width, canvas.height);
 
-          this.mousedown = function(ev){
-            tool.started = true;
-            tool.x0 = ev._x;
-            tool.y0 = ev._y;
+          if(!w || !h) {
+            return;
+          }
+
+          context.lineWidth = lineWidth;
+          context.fillStyle = fillColor;
+          context.fillRect(x , y, w, h);
+          context.strokeStyle = color;
+          context.strokeRect(x, y, w, h);
+
+          shapeObj = { 
+            shape: 'rectangle',
+            startPosition: { x: x, y: y},
+            width: w, 
+            height: h,
+            lineWidth: context.lineWidth,
+            strokeStyle: color,
+            fillStyle: fillColor
           };
+        }
 
-          this.mousemove = function(ev){
-            if(!tool.started){
+        ToolKit.Rectangle.prototype.mouseup = function(ev) {
+          if (this.started) {
+            this.mousemove(ev);
+            this.started = false;
+            imgUpdate();
+
+            ToolKit.onShapeCreated(shapeObj);
+          }
+        }
+
+        ToolKit.Rectangle.drawShapeObject = function(shapeObj) {
+          contexto.lineWidth = shapeObj.lineWidth;
+          contexto.fillStyle = shapeObj.fillStyle;
+          contexto.strokeStyle = shapeObj.strokeStyle;
+          contexto.fillRect(shapeObj.startPosition.x, shapeObj.startPosition.y, shapeObj.width, shapeObj.height);
+          contexto.strokeRect(shapeObj.startPosition.x, shapeObj.startPosition.y, shapeObj.width, shapeObj.height);
+        }
+
+        ToolKit.Line = function() {}
+        ToolKit.Line.prototype = new ToolKit.GeometricTool;
+
+        ToolKit.Line.prototype.mousedown = function(ev) {
+          this.started = true;
+          this.x0 = ev._x;
+          this.y0 = ev._y;
+        }
+
+        ToolKit.Line.prototype.mousemove = function(ev) {
+          if (!this.started) {
+            return;
+          }
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          context.beginPath();
+          context.moveTo(this.x0, this.y0);
+          context.lineTo(ev._x, ev._y);
+          context.lineWidth = lineWidth;
+          context.strokeStyle = color;
+          context.fillStyle = fillColor;
+          context.stroke();
+          context.closePath();          
+        }
+
+        ToolKit.Line.prototype.mouseup = function(ev) {
+          if (this.started) {
+            this.mousemove(ev);
+            this.started = false;
+            imgUpdate();
+
+            shapeObj = { 
+              shape: "line", 
+              startPoint: {x: this.x0, y: this.y0},
+              endPoint: {x: ev._x, y: ev._y},
+              lineWidth: context.lineWidth,
+              strokeStyle: color,
+              fillStyle: fillColor 
+            };
+
+            ToolKit.onShapeCreated(shapeObj);
+          }          
+        }
+
+        ToolKit.Line.drawShapeObject = function(shapeObj){
+          contexto.beginPath();
+          contexto.moveTo(shapeObj.startPoint.x, shapeObj.startPoint.y);
+          contexto.lineTo(shapeObj.endPoint.x, shapeObj.endPoint.y);
+          contexto.lineWidth = shapeObj.lineWidth;
+          contexto.strokeStyle = shapeObj.strokeStyle;
+          contexto.fillStyle = shapeObj.fillStyle;
+          contexto.stroke();
+          contexto.closePath();
+        }
+
+        ToolKit.Ellipse = function() {}
+        ToolKit.Ellipse.prototype = new ToolKit.GeometricTool;
+
+        ToolKit.Ellipse.prototype.mousedown = function(ev) {
+          this.started = true;
+          this.x0 = ev._x;
+          this.y0 = ev._y;
+        }
+
+        ToolKit.Ellipse.prototype.mousemove = function(ev) {
+          if(!this.started){
               return;
             }
             
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.beginPath();
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.beginPath();
 
-            var ellipseWidth = ev._x - tool.x0;
-            var ellipseHeight = ev._y - tool.y0;
+          var ellipseWidth = ev._x - this.x0;
+          var ellipseHeight = ev._y - this.y0;
 
-            context.lineWidth = line_width;
-            context.drawEllipse(tool.x0, tool.y0, ellipseWidth, ellipseHeight);
+          context.lineWidth = lineWidth;
+          context.drawEllipse(this.x0, this.y0, ellipseWidth, ellipseHeight);
 
-            context.fillStyle = fill_color;
-            context.fill();
-            context.strokeStyle = color;
-            context.stroke();
-            context.closePath();
+          context.fillStyle = fillColor;
+          context.fill();
+          context.strokeStyle = color;
+          context.stroke();
+          context.closePath();
 
-            shapeObj = {
-              shape: 'ellipse',
-              startPosition: { x: tool.x0, y: tool.y0},
-              width: ellipseWidth, 
-              height: ellipseHeight,
-              lineWidth: context.lineWidth,
-              strokeStyle: color,
-              fillStyle: fill_color
-            };
+          shapeObj = {
+            shape: 'Ellipse',
+            startPosition: { x: this.x0, y: this.y0},
+            width: ellipseWidth, 
+            height: ellipseHeight,
+            lineWidth: context.lineWidth,
+            strokeStyle: color,
+            fillStyle: fillColor
           };
-
-          this.mouseup = function(ev){
-            if(tool.started){
-              tool.mousemove(ev);
-              tool.started = false;
-              img_update();
-
-              tool_kit.onShapeCreated(shapeObj);
-            }
-          };
-
-          function createEllipse(obj){
-            contexto.beginPath();
-            contexto.lineWidth = obj.lineWidth;
-            contexto.drawEllipse(obj.startPoint.x, obj.startPoint.y, obj.width, obj.height);
-            contexto.fillStyle = obj.fillStyle;
-            contexto.strokeStyle = obj.strokeStyle;
-            contexto.fill();
-            contexto.stroke();
-            contexto.closePath();
-          }
-
-        };  
-
-        tool_kit.eraser = function(){
-          var tool = this;
-          this.started = false;
-          path_points = new Array();
-
-          this.mousedown = function(ev){
-            context.beginPath();
-            context.moveTo(ev._x, ev._y);
-            tool.started = true;
-            point = {x: ev._x, y: ev._y}
-            path_points.push(point);
-          };
-
-          this.mousemove = function(ev){
-            if (tool.started){
-              context.lineTo(ev._x, ev._y);
-              context.fillStyle = "#FFFFFF";
-              context.strokeStyle = "#FFFFFF";
-              context.lineWidth = line_width;
-              context.stroke();
-              point = {x: ev._x, y: ev._y}
-              path_points.push(point);  
-            }
-          };
-
-          this.mouseup = function(ev){
-            if (tool.started){
-              tool.mousemove(ev);
-              tool.started = false;
-              img_update();
-
-              shapeObj = { 
-                shape: "eraser", 
-                path: path_points,
-                lineWidth: context.lineWidth
-              };
-
-              tool_kit.onShapeCreated(shapeObj);
-            }            
-          }
-
-          function createEraserObj(obj){
-            contexto.strokeStyle = "#FFFFFF";
-            contexto.lineWidth = obj.lineWidth;
-            contexto.beginPath();
-            contexto.moveTo(obj.path[0].x, obj.path[0].y);
-            for(i = 1; i < obj.path.length; ++i)
-            {
-              contexto.lineTo(obj.path[i].x, obj.path[i].y);
-              contexto.stroke();
-            }
-            contexto.closePath();
-          }
-
         }
 
-        if (tool_kit[tool_default]){
-          tool = new tool_kit[tool_default]();
-          tool_select.value = tool_default;
+        ToolKit.Ellipse.prototype.mouseup = function(ev) {
+          if(this.started){
+            this.mousemove(ev);
+            this.started = false;
+            imgUpdate();
+
+            ToolKit.onShapeCreated(shapeObj);
+          }  
+        }
+
+        ToolKit.Ellipse.drawShapeObject = function(shapeObj) {
+          contexto.beginPath();
+          contexto.lineWidth = shapeObj.lineWidth;
+          contexto.drawEllipse(shapeObj.startPoint.x, shapeObj.startPoint.y, shapeObj.width, shapeObj.height);
+          contexto.fillStyle = shapeObj.fillStyle;
+          contexto.strokeStyle = shapeObj.strokeStyle;
+          contexto.fill();
+          contexto.stroke();
+          contexto.closePath();
+        }
+
+        if (ToolKit[toolDefault]){
+          tool = new ToolKit[toolDefault];
         }
       }
 
       init();
+       
     });
 
     // This method is for calculating mouse x and y cursor positions and is cross browser supported
@@ -473,14 +470,14 @@
 <body>
   <div id="panel">
     <ul id="dtool" class="tools">
-      <li id="pencil" class="tool"><img src="images/pencil_button.png" title="Pencil"/></li>
-      <li id="line" class="tool"><img src="images/lines_button.png" title="Line" /></li>      
-      <li id="rect" class="tool"><img src="images/rectangle_button.png" title="Rectangle" /></li>
-      <li id="ellipse" class="tool"><img src="images/ellipse_button.png" title="Ellipse" /></li>
-      <li id="eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
-      <li class="tool_style">
+      <li id="Pencil" class="tool"><img src="images/pencil_button.png" title="Pencil"/></li>
+      <li id="Line" class="tool"><img src="images/lines_button.png" title="Line" /></li>      
+      <li id="Rectangle" class="tool"><img src="images/rectangle_button.png" title="Rectangle" /></li>
+      <li id="Ellipse" class="tool"><img src="images/ellipse_button.png" title="Ellipse" /></li>
+      <li id="Eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
+      <li class="toolStyle">
         <label>Line Width</br>
-          <select id="line_wid">
+          <select id="lineWid">
             <option value="1">1px</option>
             <option value="2">2px</option>
             <option value="3">3px</option>
@@ -490,11 +487,11 @@
           </select>
         </label>
       </li>
-      <li class="tool_style">Color</br>
-        <input type="color" name="color" id="pcolor" />
+      <li class="toolStyle">Color</br>
+        <div id="pcolor" class="hoverBox"></div>
       </li>
-      <li class="tool_style">Filling</br>
-        <input type="color" name="fcolor" id="fcolor" />
+      <li class="toolStyle">Filling</br>
+        <div id="fcolor" class="hoverBox"></div>
       </li>
     </ul>
   </div>  
@@ -502,16 +499,20 @@
   <div id="container">
     <canvas id="imageView" width="640" height="400"></canvas>
   </div>
-
+      
   <div id="chat">
-    <div id="online_members"></div>
-    <div id="text_box">
-      <textarea rows="20" cols="28"></textarea>
+    <div id="onlineMembersWrapper">online friends:
+      <div id="onlineMembers"></div>
+    </div>  
+    <div id="textBox">
+      <div id="textareaWrapper">
+        <textarea rows="" cols=""></textarea>
+      </div>
       <form>
         <input type="text" />
-        <input type="button" value="send" />
+        <!-- <input type="button" value="send" /> -->
       </form>
-    </div>
+    </div>  
   </div>
 
 </body>

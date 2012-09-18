@@ -49,14 +49,14 @@
       padding: 0px;
     }
 
-    .tool, .tool_style
+    .tool, .toolStyle
     {
       display: inline-block;
       vertical-align: middle;
       /*opacity: 0.9;*/
     }
 
-    .tool_style
+    .toolStyle
     {
       font-weight: bold;
       text-align: center;
@@ -74,13 +74,6 @@
       opacity: 1;
     }
 
-    .pan_el
-    {
-      display: inline-block;
-      font-weight: bold;
-      margin-right: 15px;
-    }
-
     #imageTemp {
       cursor: crosshair;
     }
@@ -96,39 +89,67 @@
       height: 420px;
     }
 
-    #text_box textarea
+    #onlineMembersWrapper
     {
-      position: absolute;
-      /*bottom: 20px;*/
-      top: 20px;
-      left: 10px;
-      border-color: #FFFFFF;
+      padding-bottom: 10px;
+      margin: 10px;
+      width: 250px;
+      height: 95px;
+      background-color: #FFFFFF;
       -webkit-border-radius: 6px;
       -moz-border-radius: 6px;
       border-radius: 6px;
     }
 
-    #text_box form
+    #onlineMembers
     {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      padding: 0px 0px 0px 10px;
+      width: 250px;
+      height: 70px;
+      background-color: #FFFFFF;
+      overflow-y: scroll;
+    }
+
+    #textareaWrapper
+    {
+      width: 210px;
+      height: 250px;
+      margin-left: 10px;
+      background-color: #FFFFFF;
+      -webkit-border-radius: 6px;
+      -moz-border-radius: 6px;
+      border-radius: 6px;
+    }
+
+    #textareaWrapper textarea
+    {
+      margin-top: 10px;
+      width: 210px;
+      height: 230px;
+      border-color: #FFFFFF;
+      overflow-y: scroll;
+    }
+
+    #textBox form
+    {
+      /*position: absolute;*/
+      /*bottom: 15px;*/
+      /*left: 10px;*/
+      padding: 5px 0px 0px 10px;
       margin: 0px;
     }
 
-    #text_box form input
+    #textBox form input
     {
       -webkit-border-radius: 6px;
       -moz-border-radius: 6px;
       border-radius: 6px;
-      font-family: Bartley;
       font-weight: bold;
     }
 
-    #online_members
+    .hoverBox
     {
-      
+      float:left;
+      padding-left: 10px;
     }
 
   </style>
