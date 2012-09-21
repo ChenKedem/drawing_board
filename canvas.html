@@ -1,12 +1,13 @@
 <html>
 <head>
   <title></title>
-  <link rel="stylesheet" type="text/css" href="canvas_style.css" />
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="wColorPicker.1.2.min.css" />
-  <script type="text/javascript" src="wColorPicker.1.2.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="style/wColorPicker.1.2.min.css" />
+  <link rel="stylesheet" type="text/css" href="style/nanoscroller.css" />
+  <link rel="stylesheet" type="text/css" href="style/canvas_style.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
+  <script type="text/javascript" src="scripts/wColorPicker.1.2.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery.nanoscroller.min.js"></script>
   <script type="text/javascript">
-
     $(document).ready(function() {
 
       function init(){
@@ -70,6 +71,8 @@
         $("#lineWid").change(function(){
           lineWidth = this.value;
         });
+
+
 
         function evCanvas(ev) {
           // This will prevent chrome from changing cursor type to text on drag.
@@ -430,10 +433,16 @@
         if (ToolKit[toolDefault]){
           tool = new ToolKit[toolDefault];
         }
+
+        context.font = "bold 12px sans-serif";
+        context.fillText("chen", 248, 43);
+        context.fillText("y", 58, 165);
       }
 
       init();
-       
+
+      $("#onlineMembers >.nano").nanoScroller();
+      $("#chatContent > .nano").nanoScroller({ scrollBottom: true });
     });
 
     // This method is for calculating mouse x and y cursor positions and is cross browser supported
@@ -475,6 +484,7 @@
       <li id="Rectangle" class="tool"><img src="images/rectangle_button.png" title="Rectangle" /></li>
       <li id="Ellipse" class="tool"><img src="images/ellipse_button.png" title="Ellipse" /></li>
       <li id="Eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
+      <li id="Text" class="tool"><img src="images/text_button.png" title="text" /></li>
       <li class="toolStyle">
         <label>Line Width</br>
           <select id="lineWid">
@@ -494,6 +504,7 @@
         <div id="fcolor" class="hoverBox"></div>
       </li>
     </ul>
+    <form id="textInput"><input type="text" name="canvasText" value="write text here" /></form>
   </div>  
 
   <div id="container">
@@ -501,18 +512,42 @@
   </div>
       
   <div id="chat">
-    <div id="onlineMembersWrapper">online friends:
-      <div id="onlineMembers"></div>
-    </div>  
-    <div id="textBox">
-      <div id="textareaWrapper">
-        <textarea rows="" cols=""></textarea>
+    <h2>online friends:</h2>
+    <div id="onlineMembers" class="chatBox">
+      <div class="nano">
+        <div class="content">
+          Miki<br>
+          Chen<br>
+          MishMish<br>
+          Miki<br>
+          Chen<br>
+          MishMish<br>
+          Miki<br>
+          Chen<br>
+          MishMish<br>
+          Miki<br>
+          Chen<br>
+          MishMish<br>       
+        </div>
       </div>
-      <form>
-        <input type="text" />
-        <!-- <input type="button" value="send" /> -->
-      </form>
     </div>  
+    <div id="chatContent" class="chatBox">
+      <div class="nano">
+        <div class="content">
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+        </div>
+        <!-- <textarea class= rows="" cols=""></textarea> -->
+      </div>
+    </div>
+    <div style="margin-left: 20px;">
+      <input type="text" />
+    </div>
+      <!-- <input type="button" value="send" /> -->
   </div>
 
 </body>

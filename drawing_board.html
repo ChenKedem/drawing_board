@@ -3,7 +3,8 @@
 <head>
 	<title>Drawing Board</title>
 
-	<!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="canvas_style.css" />
+  	<link rel="stylesheet" type="text/css" href="wColorPicker.1.2.min.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
 	<script type="text/javascript">
 
@@ -38,12 +39,12 @@
 			src: url('Bartley.ttf');
 		}
 
-				body
+		body
 		{
 			margin: 0px;
 			padding: 0px;
 			font-family: Bartley, arial;
-			letter-spacing: 2px;
+			/*letter-spacing: 2px;*/
 			text-shadow: 0 0 1px rgba(0,0,0,0.5);
 			/*font-weight: bold;*/
 		}
@@ -72,13 +73,13 @@
 			/*margin-left: 300px;*/
 		}
 
-		.topBar li
+		.topBarItem
 		{
 			display: inline;
 
 		}
 
-		.topBar li a
+		.topBarItem a
 		{
 			/*color: white;*/
 			font-size: 20px;
@@ -90,7 +91,7 @@
 			text-transform: capitalize;
 		}
 
-		.topBar li a:hover
+		.topBarItem a:hover
 		{
 			color: white;
 		}
@@ -105,7 +106,7 @@
 			font-weight: bold;
 		}
 
-		input
+		#logIn input, #search input
 		{
 			-webkit-border-radius: 6px;
 			-moz-border-radius: 6px;
@@ -170,7 +171,7 @@
 			margin: 10px 100px;
 		}
 
-		footer a
+		#footerItem
 		{
 			font-weight: bold;
 			text-decoration: none;
@@ -179,7 +180,7 @@
 		}
 
 		/*settings css*/
-		.tabNav, .tabNav li
+/*		.tabNav, .tabNav li
 		{
 			border: 0px;
 			padding: 0px;
@@ -238,7 +239,7 @@
 		.active a span, .active a:hover span{
 			background: url("images/tab-round.png") left 0 no-repeat;
 		}
-
+*/
 		/*end of settings css*/
 
 	</style>
@@ -248,10 +249,10 @@
 		<img src="images/logo.png" />
 
 		<ul class="topBar">
-			<li><a href="canvas.html">demo</a></li>
-			<li><a href="">sign up</a></li>
-			<li><a href="settings.html">settings</a></li>
-			<li><a href="">contact us</a></li>
+			<li class="topBarItem"><a href="canvas.html">demo</a></li>
+			<li class="topBarItem"><a href="">sign up</a></li>
+			<li class="topBarItem"><a href="settings.html">settings</a></li>
+			<li class="topBarItem"><a href="">contact us</a></li>
 		</ul>
 		
 		<table id="logIn">
@@ -274,11 +275,11 @@
 	</div>
 	<div id="content"></div>
 	<footer>
-		<a href="">demo</a>
-		<a href="">log in</a>
-		<a href="">sign up</a>
-		<a href="">admin</a>
-		<a href="">contact us</a>
+		<a class="footerItem" href="">demo</a>
+		<a class="footerItem" href="">log in</a>
+		<a class="footerItem" href="">sign up</a>
+		<a class="footerItem" href="">admin</a>
+		<a class="footerItem" href="">contact us</a>
 	</footer>
 </body>
 </html>

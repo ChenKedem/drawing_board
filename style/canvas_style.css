@@ -1,0 +1,157 @@
+
+@font-face
+{
+  font-family: Bartley;
+  src: url('Bartley.ttf');
+}
+
+body
+{
+  font-family: Bartley, arial;
+}
+
+#container
+{
+  position: relative;
+  background-image: url("../images/board.png");
+  background-repeat: no-repeat;
+  width: 690px;
+  height: 450px;
+  margin: 20px;
+}
+#imageView 
+{
+  border: 1px solid #FFFFFF; 
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  position: absolute;
+  top: 23px;
+  left: 24px;
+  background-color: white;
+}
+
+#imageTemp { position: absolute; top: 24px; left: 25px; }
+
+#panel
+{
+  background: url("../images/panel.png");
+  background-repeat: no-repeat;
+  /*width: 640px;*/
+  height: 120px;
+  margin: 20px 10px 20px 20px;
+  padding: 20px 0px 0px 28px;
+}
+
+.tools 
+{
+  margin: 0px;
+  padding: 0px;
+}
+
+.tool, .toolStyle
+{
+  display: inline-block;
+  vertical-align: middle;
+  /*opacity: 0.9;*/
+}
+
+.toolStyle
+{
+  font-weight: bold;
+  text-align: center;
+  /*width: 90px;*/
+  margin: 0px 10px;
+}
+
+.tool
+{
+  cursor: pointer;
+}
+
+.tool:hover
+{
+  opacity: 1;
+}
+
+#imageTemp {
+  cursor: crosshair;
+}
+
+#chat
+{
+  background-image: url("../images/chat.png");
+  background-repeat: no-repeat;
+  position: fixed;
+  bottom: 0px;
+  right: 20px;
+  width: 270px;
+  height: 420px;
+  padding: 10px 20px 10px 0px;
+}
+
+#chat h2
+{
+  padding: 0px 10px;
+  margin: 0px;
+}
+
+.chatBox {
+  padding: 2px 2px 2px 3px;
+  margin: 0px auto 10px auto;
+  width: 240px;
+  background-color: #FFFFFF;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;  
+}
+
+#onlineMembers
+{
+  height: 95px;
+}
+
+#chatContent
+{
+  height: 220px;
+}
+
+.nano .pane   { background: #66ccff; }
+.nano .slider { background: #66ccff; }
+
+#textareaWrapper textarea
+{
+  margin-top: 10px;
+  width: 210px;
+  height: 230px;
+  border-color: #FFFFFF;
+  /*overflow-y: scroll;*/
+}
+
+#textBox form
+{
+  /*position: absolute;*/
+  /*bottom: 15px;*/
+  /*left: 10px;*/
+  padding: 5px 0px 0px 10px;
+  margin: 0px;
+}
+
+#textBox form input
+{
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.hoverBox
+{
+  float:left;
+  padding-left: 10px;
+}
+
+#textInput
+{
+  padding-top: 20px;
+}
