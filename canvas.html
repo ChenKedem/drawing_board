@@ -57,6 +57,14 @@
 
         toolSelect.click(evToolChange);  // for (var i = 0; i < tool_select.length; ++i) { tool_select[i].addEventListener("click", ev_tool_change, false) }
 
+        $("#Text").click(function(){
+          $("#textPanel").fadeIn();
+        })
+
+        $(".tool[id != 'Text']").click(function(){
+          $("#textPanel").fadeOut();
+        })
+
         // Define the tool kit namespace
         var ToolKit = {};
         var toolDefault = 'Pencil';
@@ -67,12 +75,20 @@
         $("#fcolor").wColorPicker({onSelect:function(chosenColor){fillColor = chosenColor}, mode: 'hover', effect: 'none', color: 'white', initColor: '#334455'});     
 
         lineWidth = $("#lineWid :first");
+        fontSize = $("#fontSize :first");
+        fontFamily = $("#fontFamily :first");
 
         $("#lineWid").change(function(){
           lineWidth = this.value;
         });
 
+        $("#fontSize").change(function(){
+          fontSize = this.value;
+        });
 
+        $("#fontFamily").change(function(){
+          fontFamily = this.value;
+        });
 
         function evCanvas(ev) {
           // This will prevent chrome from changing cursor type to text on drag.
@@ -122,6 +138,15 @@
 
         objectsArray = new Array();
 
+        textBoxVal = 'mishmish';
+        // textBoxVal = $("#textInput input").val();
+        $("#textInput").change(function(){
+          textBoxVal = this.value;
+          // alert(content);
+          console.log(textBoxVal);
+        })
+
+
         ToolKit.shapeCreated(function(shapeObj) { 
           objectsArray.push(shapeObj);
           console.log(objectsArray);
@@ -136,6 +161,48 @@
           this.pathPoints = new Array();
         }
         ToolKit.PathTool.prototype = new ToolKit.Tool;
+
+        ToolKit.Text = function() {}
+        ToolKit.Text.prototype = new ToolKit.Tool;
+
+        ToolKit.Text.prototype.mousemove = function(ev) {
+          context.font = contexto.font = "bold " + fontSize + " " + fontFamily;
+          context.fillStyle = contexto.fillStyle = color;
+          lastPosition = 0;
+          mousePosition = getCursorPosition(canvas, ev);
+          if(lastPosition != mousePosition){
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            // canvas.width = canvas.width;
+            lastPosition = mousePosition;
+            context.fillText(textBoxVal, mousePosition.x, mousePosition.y);
+          }
+        }
+
+        ToolKit.Text.prototype.mouseup = function(ev) {
+          // context.font = contexto.font = "bold 12px sans-serif";
+          mousePosition = getCursorPosition(canvas, ev);
+          contexto.fillText(textBoxVal, mousePosition.x, mousePosition.y);
+        }
+
+
+        // lastPosition = 0;
+        // $(canvas).mousemove(function(ev){
+        //   mousePosition = getCursorPosition(canvas, ev);
+        //   if(lastPosition != mousePosition){
+        //     context.clearRect(0, 0, canvas.width, canvas.height);
+        //     // canvas.width = canvas.width;
+        //     lastPosition = mousePosition;
+        //     context.fillText(textBoxVal, mousePosition.x, mousePosition.y);
+        //   }
+        // })
+
+        // $(canvas).click(function(ev){
+        //   mousePosition = getCursorPosition(canvas, ev);
+        //   contexto.fillText(textBoxVal, mousePosition.x, mousePosition.y);
+        //   console.log(mousePosition);
+        //   // canvas.width = canvas.width;
+        // })      
+
 
         ToolKit.Pencil = function() {};
         ToolKit.Pencil.prototype = new ToolKit.PathTool;
@@ -434,15 +501,13 @@
           tool = new ToolKit[toolDefault];
         }
 
-        context.font = "bold 12px sans-serif";
-        context.fillText("chen", 248, 43);
-        context.fillText("y", 58, 165);
+        $("#onlineMembers >.nano").nanoScroller();
+        $("#chatContent > .nano").nanoScroller({ scrollBottom: true });
+
       }
 
       init();
-
-      $("#onlineMembers >.nano").nanoScroller();
-      $("#chatContent > .nano").nanoScroller({ scrollBottom: true });
+      
     });
 
     // This method is for calculating mouse x and y cursor positions and is cross browser supported
@@ -504,7 +569,36 @@
         <div id="fcolor" class="hoverBox"></div>
       </li>
     </ul>
-    <form id="textInput"><input type="text" name="canvasText" value="write text here" /></form>
+    <div id="textPanel">
+      <input id="textInput" type="text" value="write text here" />
+      <label>Font Size
+        <select id="fontSize">
+          <option value="12px">12px</option>
+          <option value="16px">16px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
+          <option value="28px">28px</option>
+          <option value="32px">32px</option>
+        </select>
+      </label>
+      <label>Font Family
+        <select id="fontFamily">
+          <option value="Georgia">Georgia</option>
+          <option value="Palatino Linotype">Palatino Linotype</option>
+          <option value="Book Antiqua">Book Antiqua</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Arial">Arial</option>
+          <option value="Helvetica">Helvetica</option>
+          <option value="Arial Black">Arial Black</option>
+          <option value="Impact">Impact</option>
+          <option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
+          <option value="Tahoma">Tahoma</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Lucida Console">Lucida Console</option>
+        </select>
+      </label>  
+    </div>  
   </div>  
 
   <div id="container">

@@ -17,7 +17,7 @@ body
   background-repeat: no-repeat;
   width: 690px;
   height: 450px;
-  margin: 20px;
+  margin: 0px  0px 0px 77px;
 }
 #imageView 
 {
@@ -38,15 +38,15 @@ body
   background: url("../images/panel.png");
   background-repeat: no-repeat;
   /*width: 640px;*/
-  height: 120px;
+  height: 150px;
   margin: 20px 10px 20px 20px;
-  padding: 20px 0px 0px 28px;
+  padding: 20px 0px 0px 0px;
 }
 
 .tools 
 {
   margin: 0px;
-  padding: 0px;
+  padding: 0px 0px 0px 28px;
 }
 
 .tool, .toolStyle
@@ -151,7 +151,19 @@ body
   padding-left: 10px;
 }
 
+#textPanel 
+{
+  background-image: url("../images/text_panel.png");
+  background-repeat: no-repeat;
+  height: 80px;
+  margin: 20px 0px;
+  font-weight: bold;
+  display: none;
+}
+
 #textInput
 {
-  padding-top: 20px;
+  margin: 18px 0px 15px 35px;
+  width: 330px;
+  font-family: Bartley;
 }
