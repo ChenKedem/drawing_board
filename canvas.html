@@ -142,11 +142,7 @@
         $("#textInput").change(function(){
           textBoxVal = this.value;
         })
-
-        // d = document.createElement("span");
-        // d.font = "" + fontSize + " " + fontFamily;
-        // d.textContent = textBoxVal;
-        // textBoxValHeight = d.offsetHeight;
+        context.textBaseline = contexto.textBaseline = "top";
 
         ToolKit.shapeCreated(function(shapeObj) { 
           objectsArray.push(shapeObj);
@@ -172,8 +168,7 @@
         ToolKit.Text.prototype.mousemove = function(ev) {
           context.font = "bold " + fontSize + " " + fontFamily;
           context.fillStyle = color;
-          context.textBaseline = "top";
-
+          
           var mousePosition = getCursorPosition(canvas, ev);
           if (this.lastPosition != mousePosition) {
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -184,7 +179,7 @@
 
         ToolKit.Text.prototype.mouseup = function(ev) {
           contexto.font = context.font;
-          contexto.fillStyle = context.fillStyle
+          contexto.fillStyle = context.fillStyle;
 
           mousePosition = getCursorPosition(canvas, ev);
           contexto.fillText(textBoxVal, mousePosition.x, mousePosition.y);
@@ -193,8 +188,8 @@
               shape: "Text", 
               textContent: textBoxVal,
               font: context.font,
-              textColor: context.fiilStyle,
-              textBaseline: context.textBaseline,
+              textColor: context.fillStyle,
+              textBaseline: "top",
               position: mousePosition 
             };
         }
