@@ -58,11 +58,11 @@
         toolSelect.click(evToolChange);  // for (var i = 0; i < tool_select.length; ++i) { tool_select[i].addEventListener("click", ev_tool_change, false) }
 
         $("#Text").click(function(){
-          $("#textPanel").fadeIn();
+          $("#textPanel").slideDown();
         })
 
         $(".tool[id != 'Text']").click(function(){
-          $("#textPanel").fadeOut();
+          $("#textPanel").slideUp();
         })
 
         // Define the tool kit namespace
@@ -74,9 +74,9 @@
 
         $("#fcolor").wColorPicker({onSelect:function(chosenColor){fillColor = chosenColor}, mode: 'hover', effect: 'none', color: 'white', initColor: '#334455'});     
 
-        lineWidth = $("#lineWid :first");
-        fontSize = $("#fontSize :first");
-        fontFamily = $("#fontFamily :first");
+        lineWidth = $("#lineWid").val();
+        fontSize = $("#fontSize").val();
+        fontFamily = $("#fontFamily").val();
 
         $("#lineWid").change(function(){
           lineWidth = this.value;
@@ -138,14 +138,15 @@
 
         objectsArray = new Array();
 
-        textBoxVal = 'mishmish';
-        // textBoxVal = $("#textInput input").val();
+        textBoxVal = $("#textInput").val();
         $("#textInput").change(function(){
           textBoxVal = this.value;
-          // alert(content);
-          console.log(textBoxVal);
         })
 
+        // d = document.createElement("span");
+        // d.font = "" + fontSize + " " + fontFamily;
+        // d.textContent = textBoxVal;
+        // textBoxValHeight = d.offsetHeight;
 
         ToolKit.shapeCreated(function(shapeObj) { 
           objectsArray.push(shapeObj);
@@ -162,47 +163,49 @@
         }
         ToolKit.PathTool.prototype = new ToolKit.Tool;
 
-        ToolKit.Text = function() {}
+        ToolKit.Text = function() {
+          this.lastPosition = { x: 0, y: 0 }
+        }
+
         ToolKit.Text.prototype = new ToolKit.Tool;
 
         ToolKit.Text.prototype.mousemove = function(ev) {
-          context.font = contexto.font = "bold " + fontSize + " " + fontFamily;
-          context.fillStyle = contexto.fillStyle = color;
-          lastPosition = 0;
-          mousePosition = getCursorPosition(canvas, ev);
-          if(lastPosition != mousePosition){
+          context.font = "bold " + fontSize + " " + fontFamily;
+          context.fillStyle = color;
+          context.textBaseline = "top";
+
+          var mousePosition = getCursorPosition(canvas, ev);
+          if (this.lastPosition != mousePosition) {
             context.clearRect(0, 0, canvas.width, canvas.height);
-            // canvas.width = canvas.width;
-            lastPosition = mousePosition;
+            this.lastPosition = mousePosition;
             context.fillText(textBoxVal, mousePosition.x, mousePosition.y);
           }
         }
 
         ToolKit.Text.prototype.mouseup = function(ev) {
-          // context.font = contexto.font = "bold 12px sans-serif";
+          contexto.font = context.font;
+          contexto.fillStyle = context.fillStyle
+
           mousePosition = getCursorPosition(canvas, ev);
           contexto.fillText(textBoxVal, mousePosition.x, mousePosition.y);
+
+          var shapeObj = { 
+              shape: "Text", 
+              textContent: textBoxVal,
+              font: context.font,
+              textColor: context.fiilStyle,
+              textBaseline: context.textBaseline,
+              position: mousePosition 
+            };
         }
 
+        ToolKit.Text.drawShapeObject = function(shapeObj) {
+          contexto.font = shapeObj.font;
+          contexto.fillStyle = shapeObj.textColor;
+          contexto.textBaseline = shapeObj.textBaseline;
 
-        // lastPosition = 0;
-        // $(canvas).mousemove(function(ev){
-        //   mousePosition = getCursorPosition(canvas, ev);
-        //   if(lastPosition != mousePosition){
-        //     context.clearRect(0, 0, canvas.width, canvas.height);
-        //     // canvas.width = canvas.width;
-        //     lastPosition = mousePosition;
-        //     context.fillText(textBoxVal, mousePosition.x, mousePosition.y);
-        //   }
-        // })
-
-        // $(canvas).click(function(ev){
-        //   mousePosition = getCursorPosition(canvas, ev);
-        //   contexto.fillText(textBoxVal, mousePosition.x, mousePosition.y);
-        //   console.log(mousePosition);
-        //   // canvas.width = canvas.width;
-        // })      
-
+          contexto.fillText(shapeObj.textContent, shapeObj.position.x, shapeObj.position.y);
+        }
 
         ToolKit.Pencil = function() {};
         ToolKit.Pencil.prototype = new ToolKit.PathTool;
@@ -548,8 +551,8 @@
       <li id="Line" class="tool"><img src="images/lines_button.png" title="Line" /></li>      
       <li id="Rectangle" class="tool"><img src="images/rectangle_button.png" title="Rectangle" /></li>
       <li id="Ellipse" class="tool"><img src="images/ellipse_button.png" title="Ellipse" /></li>
-      <li id="Eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
       <li id="Text" class="tool"><img src="images/text_button.png" title="text" /></li>
+      <li id="Eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
       <li class="toolStyle">
         <label>Line Width</br>
           <select id="lineWid">
@@ -557,8 +560,13 @@
             <option value="2">2px</option>
             <option value="3">3px</option>
             <option value="4">4px</option>
-            <option value="5">5px</option>
             <option value="6">6px</option>
+            <option value="8">8px</option>
+            <option value="8">12px</option>
+            <option value="8">16px</option>
+            <option value="8">20px</option>
+            <option value="8">24px</option>
+            <option value="8">28px</option>
           </select>
         </label>
       </li>
@@ -575,7 +583,7 @@
         <select id="fontSize">
           <option value="12px">12px</option>
           <option value="16px">16px</option>
-          <option value="20px">20px</option>
+          <option value="20px" selected>20px</option>
           <option value="24px">24px</option>
           <option value="28px">28px</option>
           <option value="32px">32px</option>
@@ -583,6 +591,7 @@
       </label>
       <label>Font Family
         <select id="fontFamily">
+          <option value="Bartley">Bartley</option>
           <option value="Georgia">Georgia</option>
           <option value="Palatino Linotype">Palatino Linotype</option>
           <option value="Book Antiqua">Book Antiqua</option>
