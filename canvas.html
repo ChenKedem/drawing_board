@@ -7,6 +7,7 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
   <script type="text/javascript" src="scripts/wColorPicker.1.2.min.js"></script>
   <script type="text/javascript" src="scripts/jquery.nanoscroller.min.js"></script>
+  <script type="text/javascript" src="scripts/floodFill.js"></script>  
   <script type="text/javascript">
     $(document).ready(function() {
 
@@ -55,7 +56,12 @@
           return;
         }
 
-        toolSelect.click(evToolChange);  // for (var i = 0; i < tool_select.length; ++i) { tool_select[i].addEventListener("click", ev_tool_change, false) }
+        toolSelect.click(function(ev) {
+          evToolChange.call(this, ev);
+          $(".tool").css("background-position", "0 0");
+          $(this).css("background-position", "0 -65px");
+        });
+        // for (var i = 0; i < tool_select.length; ++i) { tool_select[i].addEventListener("click", ev_tool_change, false) }
 
         $("#Text").click(function(){
           $("#textPanel").slideDown();
@@ -146,7 +152,6 @@
 
         ToolKit.shapeCreated(function(shapeObj) { 
           objectsArray.push(shapeObj);
-          console.log(objectsArray);
         });
 
         // Add tool classes to the tool_kit namespace
@@ -158,6 +163,19 @@
           this.pathPoints = new Array();
         }
         ToolKit.PathTool.prototype = new ToolKit.Tool;
+
+        ToolKit.PaintBucket = function() {}
+        ToolKit.PaintBucket.prototype = new ToolKit.Tool;
+
+        ToolKit.PaintBucket.prototype.mouseup = function(ev){
+          var imgDataArray = contexto.getImageData(0, 0, canvaso.width, canvaso.height);
+          var position = getCursorPosition(canvaso, ev);
+          
+          floodFill = new FloodFill(imgDataArray, canvaso.width, canvaso.height);
+          floodFill.fill(position.x, position.y, color);
+
+          contexto.putImageData(imgDataArray, 0, 0);
+        }
 
         ToolKit.Text = function() {
           this.lastPosition = { x: 0, y: 0 }
@@ -542,16 +560,17 @@
 <body>
   <div id="panel">
     <ul id="dtool" class="tools">
-      <li id="Pencil" class="tool"><img src="images/pencil_button.png" title="Pencil"/></li>
-      <li id="Line" class="tool"><img src="images/lines_button.png" title="Line" /></li>      
-      <li id="Rectangle" class="tool"><img src="images/rectangle_button.png" title="Rectangle" /></li>
-      <li id="Ellipse" class="tool"><img src="images/ellipse_button.png" title="Ellipse" /></li>
-      <li id="Text" class="tool"><img src="images/text_button.png" title="text" /></li>
-      <li id="Eraser" class="tool"><img src="images/eraser_button.png" title="Eraser" /></li>
+      <li id="Pencil" class="tool"><img src="images/pencil_sprite1.png" title="Pencil"/></li>
+      <li id="Line" class="tool"><img src="images/line_sprite.png" title="Line" /></li>      
+      <li id="Rectangle" class="tool"><img src="images/rectangle_sprite.png" title="Rectangle" /></li>
+      <li id="Ellipse" class="tool"><img src="images/ellipse_sprite.png" title="Ellipse" /></li>
+      <li id="Text" class="tool"><img src="images/text_sprite.png" title="Text" /></li>
+      <li id="PaintBucket" class="tool"><img src="images/paint_bucket_sprite.png" title="Paint Bucket"/></li>
+      <li id="Eraser" class="tool"><img src="images/eraser_sprite.png" title="Eraser" /></li>
       <li class="toolStyle">
         <label>Line Width</br>
           <select id="lineWid">
-            <option value="1">1px</option>
+            <!-- <option value="1">1px</option> -->
             <option value="2">2px</option>
             <option value="3">3px</option>
             <option value="4">4px</option>
@@ -606,6 +625,7 @@
   </div>  
 
   <div id="container">
+    <!--<canvas id="imageView" width="640" height="400"></canvas>-->
     <canvas id="imageView" width="640" height="400"></canvas>
   </div>
       

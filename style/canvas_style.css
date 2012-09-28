@@ -19,19 +19,21 @@ body
   height: 450px;
   margin: 0px  0px 0px 77px;
 }
+
 #imageView 
 {
-  border: 1px solid #FFFFFF; 
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
   position: absolute;
-  top: 23px;
-  left: 24px;
+  top: 22px;
+  left: 23px;
   background-color: white;
 }
 
-#imageTemp { position: absolute; top: 24px; left: 25px; }
+#imageTemp 
+{ 
+  position: absolute;
+  top: 22px; 
+  left: 23px; 
+}
 
 #panel
 {
@@ -41,6 +43,7 @@ body
   height: 150px;
   margin: 20px 10px 0px 20px;
   padding: 20px 0px 0px 0px;
+  position: relative;
 }
 
 .tools 
@@ -49,11 +52,15 @@ body
   padding: 0px 0px 0px 28px;
 }
 
+.tool:hover
+{
+  opacity: 0.8;
+}
+
 .tool, .toolStyle
 {
   display: inline-block;
   vertical-align: middle;
-  /*opacity: 0.9;*/
 }
 
 .toolStyle
@@ -67,12 +74,24 @@ body
 .tool
 {
   cursor: pointer;
+  /*position: absolute;*/
+  width: 65px;
+  height: 65px;
 }
 
-.tool:hover
+.tool img
 {
-  opacity: 1;
+  width: 0px;
+  height: 0px;
 }
+
+#Pencil { background: url("../images/pencil_sprite.png") 0 0; }
+#Line { background: url("../images/line_sprite.png") 0 0; }
+#Rectangle { background: url("../images/rectangle_sprite.png") 0 0; }
+#Ellipse { background: url("../images/ellipse_sprite.png") 0 0; }
+#Text { background: url("../images/text_sprite.png") 0 0; }
+#PaintBucket { background: url("../images/paint_bucket_sprite.png") 0 0; }
+#Eraser { background: url("../images/eraser_sprite.png") 0 0; }
 
 #imageTemp {
   cursor: crosshair;

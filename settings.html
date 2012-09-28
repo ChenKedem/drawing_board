@@ -25,7 +25,7 @@
 				$.ajax({
 					url: contentSource,
 					success:function(data){
-						$("#content").html(data);
+						$("#settingsContent").html(data);
 					}
 				});
 				return false;
@@ -42,7 +42,7 @@
 
 	<style type="text/css">
 
-		@font-face
+	/*	@font-face
 		{
 			font-family: Bartley;
 			src: url('Bartley.ttf');
@@ -55,7 +55,7 @@
 			font-family: Bartley, arial;
 			letter-spacing: 2px;
 			text-shadow: 0 0 1px rgba(0,0,0,0.5);
-			/*font-weight: bold;*/
+
 		}
 
 		#header
@@ -79,7 +79,7 @@
 			margin: 0px;
 			list-style: none;
 			padding-top: 30px;
-			/*margin-left: 300px;*/
+
 		}
 
 		#topBar li
@@ -90,7 +90,7 @@
 
 		#topBar li a
 		{
-			/*color: white;*/
+
 			font-size: 20px;
 			color: #00BBDD;
 			
@@ -107,9 +107,9 @@
 
 		#logIn
 		{
-			/*display: inline;*/
+
 			float: right;
-			/*color: white;*/
+
 			padding: 15px;
 			margin: 0px;
 			font-weight: bold;
@@ -122,14 +122,11 @@
 			border-radius: 6px;
 			border: 0px;
 			background-color: white;
-			/*background-color: #99FFEE;*/
-			/*opacity: 0.5;*/
 		}
 
 		#search
 		{
 			float: right;
-			/*color: white;*/
 			font-weight: bold;
 			padding: 30px 10px;
 		}
@@ -139,12 +136,10 @@
 			padding: 0px 0px 2px 0px; 
 			background: #CC0055;
 			color: white;
-			/*text-align: center;*/
 		}
 
 		#about img
 		{
-			/*display: inline;*/
 			float: right;
 			cursor: pointer;
 			width: 15px;
@@ -263,18 +258,18 @@
 
 		#content form input, #content form select
 		{
-			/*margin-bottom: 15px;*/
+
 		}
 
 		#content table td{padding-top: 0px;}
 		#content table tr{line-height: 40px;}
-
+*/
 
 
 	</style>
 </head>
 <body>
-	<div id="header">
+<!--  	<div id="header">
 		<img src="logo.png" />
 		<ul id="topBar">
 			<li><a href="">demo</a></li>
@@ -295,19 +290,19 @@
 		</table>
 		<form id="search">search: <input type="text" name="search" /></form>
 	</div>
-	
+ -->	
 	
 	<ul class="tabNav">
 		<li class="active"><a href="account_content.html"><span>account</span></a></li>
 		<li><a href="profile_content.html"><span>profile</span></a></li>
-		<li><a href="#"><span>privacy</span></a></li>
+		<li><a href="none"><span>privacy</span></a></li>
 		<li><a href="password_content.html"><span>password</span></a></li>
-		<li><a href="#"><span>mobile</span></a></li>
-		<li><a href="#"><span>e-mail notifications</span></a></li>
-		<li><a href="#"><span>design</span></a></li>
+		<li><a href="none"><span>mobile</span></a></li>
+		<li><a href="none"><span>e-mail notifications</span></a></li>
+		<li><a href="none"><span>design</span></a></li>
 	</ul>
 
-	<div id="content">
+	<div id="settingsContent">
 
 	</div>
 
@@ -319,4 +314,4 @@
 		<a href="">contact us</a>
 	</div>
 </body>
-</html>
+</html> 
