@@ -7,7 +7,8 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
   <script type="text/javascript" src="scripts/wColorPicker.1.2.min.js"></script>
   <script type="text/javascript" src="scripts/jquery.nanoscroller.min.js"></script>
-  <script type="text/javascript" src="scripts/floodFill.js"></script>  
+  <script type="text/javascript" src="scripts/floodFill.js"></script>
+  <script type="text/javascript" src="scripts/chat.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
 
@@ -145,7 +146,7 @@
         objectsArray = new Array();
 
         textBoxVal = $("#textInput").val();
-        $("#textInput").change(function(){
+        $("#textInput").keyup(function(){
           textBoxVal = this.value;
         })
         context.textBaseline = contexto.textBaseline = "top";
@@ -153,6 +154,8 @@
         ToolKit.shapeCreated(function(shapeObj) { 
           objectsArray.push(shapeObj);
         });
+
+        chat = new ChatUIManager($("#onlineMembers .content")[0], $("#chatContent .content")[0], $("#chatTextInput")[0], $("#buttonInput")[0]);
 
         // Add tool classes to the tool_kit namespace
         ToolKit.Tool = function() {
@@ -560,7 +563,7 @@
 <body>
   <div id="panel">
     <ul id="dtool" class="tools">
-      <li id="Pencil" class="tool"><img src="images/pencil_sprite1.png" title="Pencil"/></li>
+      <li id="Pencil" class="tool"><img src="images/pencil_sprite.png" title="Pencil"/></li>
       <li id="Line" class="tool"><img src="images/line_sprite.png" title="Line" /></li>      
       <li id="Rectangle" class="tool"><img src="images/rectangle_sprite.png" title="Rectangle" /></li>
       <li id="Ellipse" class="tool"><img src="images/ellipse_sprite.png" title="Ellipse" /></li>
@@ -570,17 +573,17 @@
       <li class="toolStyle">
         <label>Line Width</br>
           <select id="lineWid">
-            <!-- <option value="1">1px</option> -->
             <option value="2">2px</option>
             <option value="3">3px</option>
             <option value="4">4px</option>
             <option value="6">6px</option>
             <option value="8">8px</option>
-            <option value="8">12px</option>
-            <option value="8">16px</option>
-            <option value="8">20px</option>
-            <option value="8">24px</option>
-            <option value="8">28px</option>
+            <option value="12">12px</option>
+            <option value="16">16px</option>
+            <option value="20">20px</option>
+            <option value="24">24px</option>
+            <option value="28">28px</option>
+            <option value="32">32px</option>
           </select>
         </label>
       </li>
@@ -592,7 +595,8 @@
       </li>
     </ul>
     <div id="textPanel">
-      <input id="textInput" type="text" value="write text here" />
+      <!-- <input id="textInput" type="text" value="write text here" /> -->
+      <textarea id="textInput" row="1" col="40">write text here</textarea>
       <label>Font Size
         <select id="fontSize">
           <option value="12px">12px</option>
@@ -601,6 +605,10 @@
           <option value="24px">24px</option>
           <option value="28px">28px</option>
           <option value="32px">32px</option>
+          <option value="48px">48px</option>
+          <option value="60px">60px</option>
+          <option value="72px">72px</option>
+          <option value="90px">90px</option>
         </select>
       </label>
       <label>Font Family
@@ -625,47 +633,25 @@
   </div>  
 
   <div id="container">
-    <!--<canvas id="imageView" width="640" height="400"></canvas>-->
     <canvas id="imageView" width="640" height="400"></canvas>
   </div>
       
   <div id="chat">
-    <h2>online friends:</h2>
+    <h4>online friends:</h4>
     <div id="onlineMembers" class="chatBox">
       <div class="nano">
         <div class="content">
-          Miki<br>
-          Chen<br>
-          MishMish<br>
-          Miki<br>
-          Chen<br>
-          MishMish<br>
-          Miki<br>
-          Chen<br>
-          MishMish<br>
-          Miki<br>
-          Chen<br>
-          MishMish<br>       
         </div>
       </div>
     </div>  
     <div id="chatContent" class="chatBox">
       <div class="nano">
         <div class="content">
-          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
         </div>
-        <!-- <textarea class= rows="" cols=""></textarea> -->
       </div>
     </div>
-    <div style="margin-left: 20px;">
-      <input type="text" />
-    </div>
-      <!-- <input type="button" value="send" /> -->
+    <input id="chatTextInput" type="text" />
+    <input id="buttonInput" type="button" value="send" />
   </div>
 
 </body>

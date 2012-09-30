@@ -10,7 +10,7 @@ FloodFill.prototype.fill = function(x, y, fillColor) {
   var oldFillColor = this.getPixelColorData(x, y);
   this.checkAndFillAdjacentPixels(x, y, oldFillColor, newFillColor);
 
-  while(this.stack.length > 0){
+  while(this.stack.length > 0) {
     var toFill = this.stack.pop();
     this.checkAndFillAdjacentPixels(toFill[0], toFill[1], oldFillColor, newFillColor);
   }
@@ -83,21 +83,3 @@ FloodFill.hexToRgb = function(hex) {
 
   return { r: value[0], g: value[1], b: value[2] };
 }
-
-function hexToRGB(hex) {
-      if(hex.charAt(0) == "#") hex = hex.slice(1); //Remove the '#' char - if there is one.
-      hex = hex.toUpperCase();
-      var hex_alphabets = "0123456789ABCDEF";
-      var value = new Array(3);
-      var k = 0;
-      var int1,int2;
-      for(var i=0;i<6;i+=2) {
-        int1 = hex_alphabets.indexOf(hex.charAt(i));
-        int2 = hex_alphabets.indexOf(hex.charAt(i+1)); 
-        value[k] = (int1 * 16) + int2;
-        k++;
-      }
-      return {r:value[0], g:value[1], b:value[2] };
-    }
-
-    
